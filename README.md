@@ -12,9 +12,9 @@ To get the ultrasound wave analyzer running, take the following steps:
 ![Newly opened wave analyzer gui in matlab as of 2018-07-16.](./blank_gui_20180716.png?raw=true "Example GUI")
 
 4. Set the appropriate calibration value to convert your data from voltage to pressure (Default: 0.022 V/MPa for Onda HGL-0200 hydrophone). Set this to 1.0, if your data is already a time-pressure series.
-5. Select the appropriate input data set by finding the 'Input Wave CSV File' and clicking the folder icon to the right of this box to open a graphical interface to choose your input data set. Alternately, type the file path in the box labeled 'Input Wave CSV File' and click the button labeled 'Load/Reset'.
+5. Select the appropriate input data set by finding the 'Input Wave CSV File' and clicking the folder icon to the right of this box to open a graphical interface to choose your input data set. Alternately, type the file path in the box labeled 'Input Wave CSV File' and click the button labeled 'Load/Reset'. This should load the input data, plot the pressure waveform, and run a pulse analysis on the entire waveform. Doing this for the sample data set 'example_input_data.csv' will look like this.
+![Newly opened wave analyzer gui in matlab as of 2018-07-16.](./example_gui_20180716.png?raw=true "Example GUI")
 
-This should load and plot the pressure waveform from the imported data.
 1. 
 
 ### Prerequisites
