@@ -1,3 +1,5 @@
+### THIS README is under construction. Please be patient while it is completed. If you have questions, please contact the author at i.am.brandon.patterson@gmail.com and I will try to answer you directly or in the readme and then notify you. Thanks!
+
 # Wave_analyzer
 
 Tools and GUI for analyzing recorded ultrasound waves.
@@ -56,10 +58,33 @@ paragraphs for an example case.
 * A plot of the chosen acoustic quanitity from the timeseries data is shown here.
 * Pressure (MPa) vs time (us) is the default plot. Intensity (W/cm^2) vs time (us), and frequency content (fft) can also be plotted.
 
-4. Plot chooser
+4. Plot picker
 * Select the radio button of the quanitity you wish to plot (Pressure, Intensity, FFT).
-* Intensity is calculated for an acoustic signal recorded in water (density = 1000 kg/m^3, sound speed = 1500 m/s), assuming linear acoustic relationships (acoustic velocity = acoustic pressure / acoustic impedance). Where acoustic impedance = density*sound speed. Hence Intensity = pressure^2 / (density*sound speed). See Fundamentals of Acoustics by Kinsler et al. for more information.
 
+5. Plot tools
+
+6. Pulse boundaries
+
+7. Pulse analysis
+
+8. Pulse derating
+
+9. Export data
+
+
+## Acoustic quantities and calculations
+* Pressure
+* Intensity is calculated for an acoustic signal recorded in water (density = 1000 kg/m^3, sound speed = 1500 m/s), assuming linear acoustic relationships (acoustic velocity = acoustic pressure / acoustic impedance). Where acoustic impedance = density*sound speed. Intensity = pressure^2 / (density*sound speed). See Fundamentals of Acoustics by Kinsler et al. for more information.
+* Fast Fourier Transform:
+* Maximum pressure, P+ (MPa):
+* Minimum pressure (e.g., peak rarefaction pressure amplitude (PRPA)), P- (MPa):
+* Center pressure, <p> (MPa):
+* Pulse average Intensity, Ipa (W/cm2):
+* Center frequency, fc (MHz):
+* Mechanical Index, MI:
+* Derated pressure (MPa):
+* Attenuation coefficient (dB/cm/MHz):
+* Depth (cm):
 
 ## Deployment Notes
 
