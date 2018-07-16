@@ -6,15 +6,17 @@ Tools and GUI for analyzing recorded ultrasound waves.
 
 To get the ultrasound wave analyzer running, take the following steps:
 1. Download or git clone the 'wave_analyzer' repository to your local computer.
-2. In MATLAB, navigate to the newly created 'wave_analyzer' directory.
-3. In MATLAB, open 'wave_gui.m' in the editor and run the program.
+1. In MATLAB, navigate to the newly created 'wave_analyzer' directory.
+1. In MATLAB, open 'wave_gui.m' in the editor and run the program. A MATLAB figure should open that looks approximately like the one below.
 
 ![Newly opened wave analyzer gui in matlab as of 2018-07-16.](./blank_gui_20180716.png?raw=true "Example GUI")
 
+1. 
 
 ### Prerequisites
 
-What things you need to install the software and how to install them
+1. MATLAB : This project was developed and tested in MATLAB 2018a. Older versions of MATLAB may work, but have not been tested.
+2. Microsoft Excel (optional) : This function has the ability to export processed data and figures to a '.xlsx' format. To open these, Microsoft excel or another capable program (e.g., google sheets) may be necessary.
 
 ```
 Give examples
@@ -60,34 +62,30 @@ Give an example
 
 ## Deployment
 
-Add additional notes about how to deploy this on a live system
+* This was developed and tested on MATLAB 2018a using guide. Forward or backward compatibility not guaranteed.
+* This was created to work with .CSV files output from a tektronix MDO3052 Mixed Domain Oscilloscope. For other input formats, changes to the code will be required.
+* The base calibration value of 0.022 MPa / MHz is for an ONDA HGL-0200 "Golden Lipstick" Hydrophone. This should be changed for input data measured using other devices. See your hydrophone documentation for details.
 
 ## Built With
 
-* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
-* [Maven](https://maven.apache.org/) - Dependency Management
-* [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
+* MATLAB using the 'guide' gui creator. 
 
 ## Contributing
 
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
+Interested in contributing to this project. Contact me via github or at i.am.brandon.patterson@gmail.com
 
-## Versioning
-
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags).
 
 ## Authors
 
-* **Billie Thompson** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
+* **Brandon Patterson** - *Initial work* - [bspatter](https://github.com/bspatter)
 
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
+
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+
 
 ## Acknowledgments
-
-* Hat tip to anyone whose code was used
-* Inspiration
-* etc
+Brian Worthmann for the very useful bfft.m and bifft.m functions
+Michelle Hirsch for the xlswritefig function - https://www.mathworks.com/matlabcentral/fileexchange/24424-xlswritefig.
+Billie Thompson for the gitub README-Template - https://gist.github.com/PurpleBooth/109311bb0361f32d87a2
