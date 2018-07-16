@@ -21,9 +21,45 @@ To get the ultrasound wave analyzer running, take the following steps:
 1. MATLAB : This project was developed and tested in MATLAB 2018a. Older versions of MATLAB may work, but have not been tested.
 2. Microsoft Excel (optional) : This function has the ability to export processed data and figures to a '.xlsx' format. To open these, Microsoft excel or another capable program (e.g., google sheets) may be necessary.
 
-## Using the wave analyzer.
-The wave analyzer has a variety of useful features and functions. To explain these features, they have been numbered and explained in the figure below and subsequent paragraphs.
-![Newly opened wave analyzer gui in matlab as of 2018-07-16.](./numbered_gui_20180716.png?raw=true "Example GUI")
+## Using the wave analyzer.  The wave analyzer was created originally
+created to take raw hydrophone recordings of ultrasound pressure waves
+and analyze the data to extract and display acoustic quantities
+relevant to diagnostic ultrasound bioeffects (e.g., frequency content,
+intensity, mechanical index, etc...). The analysis performed is
+largely based on linear acoustics and as such, is imperfect for most
+ultrasound waves, which are typically nonlinear. However, this tool
+should provide a decent approximation for researchers and inquiring
+minds. The methods used in the analysis and relevant references should
+be detailed thoughout this document, but if something is missing, feel
+free to check out the code or contact the author.
+
+The wave analyzer has a variety of features and functions to try to
+make it easy to extact information about useful acoustic quantities
+from raw hydrophone measurements. To explain these features, the various components of the wave analyzer's graphical user interface (GUI) 
+been numbered and explained in the figure below and subsequent
+paragraphs for an example case.
+![Newly opened wave analyzer gui in matlab as of
+2018-07-16.](./numbered_gui_20180716.png?raw=true "Example GUI")
+
+1. Input filepath box, browse button, 'Load / Reset' button.
+* The Input filepath box contains the filepath to the .csv file which contains timeseries data of the measured hydrophone voltage. This can be typed manually or selected with a filebrowser by clicking the browse button (i.e., button with the folder icon to the right). Choosing a dataset using the filebrowser will automatically load the dataset. NOTE: The raw voltage in the input .csv file will be converted to pressure using conversion coeffiecient in the calibration box (see 2.)
+* The 'Load / Reset' button will load the dataset that is indicated in the Input filepath box. If chosen dataset is already loaded, this button will reset any analysis and plots that have been created to their original state.
+* Loading a dataset though either method (e.g., using the filebrowser or typing the path and clicking 'Load / Reset'), will automatically plot and analyze the data. The analysis will use the upper and lower time bounds of the data as right and left pulse boundaries respectively.
+* Depending on the computer and size of the dataset, this may take several seconds. 
+
+2. Calibration box
+* The value specified here is used to convert the voltage in the csv file to pressure.
+* The units are Volts / MPa.
+* The default value is 0.022 V/MPa. This is based on an Onda HGL-0200 transducer.
+
+3. Data plot
+* A plot of the chosen acoustic quanitity from the timeseries data is shown here.
+* Pressure (MPa) vs time (us) is the default plot. Intensity (W/cm^2) vs time (us), and frequency content (fft) can also be plotted.
+
+4. Plot chooser
+* Select the radio button of the quanitity you wish to plot (Pressure, Intensity, FFT).
+* Intensity is calculated for an acoustic signal recorded in water (density = 1000 kg/m^3, sound speed = 1500 m/s), assuming linear acoustic relationships (acoustic velocity = acoustic pressure / acoustic impedance). Where acoustic impedance = density*sound speed. Hence Intensity = pressure^2 / (density*sound speed). See Fundamentals of Acoustics by Kinsler et al. for more information.
+
 
 ## Deployment Notes
 
