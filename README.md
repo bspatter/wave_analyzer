@@ -92,6 +92,8 @@ paragraphs for an example case.
 * This was created to work with .CSV files output from a tektronix MDO3052 Mixed Domain Oscilloscope. For other input formats, change 'read_input_data.m' to read your dataset such that it produces two vector outputs: time and voltage. Output values must be real and finite. The first output variable, 'time', must contain unique, monotonically increasing values containing the times (in seconds) at which the voltage measurements are taken. The second output, 'voltage' must contain the voltage measurements at each time value. Here, voltage is pressure (MPa) times calibration (V/MPa), such that if the input is already in units of pressure (MPa), the calibration value should be changed to 1.0 (V/MPa). 
 * The base calibration value of 0.022 MPa / MHz is for an ONDA HGL-0200 "Golden Lipstick" Hydrophone. This should be changed for input data measured using other devices. See your hydrophone documentation for details.
 
+## To Do:
+* Fix bug where pulse bounds don't adjust y-values when switching from Intensity to pressure.
 
 ## Built With
 
