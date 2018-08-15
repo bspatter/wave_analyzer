@@ -168,7 +168,7 @@ PII_cm = trapz(time, Instant_Intensity)/range(time)/1e4; %Pulse intensity integr
 % Match Doug's calculations
 DH = diff(time).*(Instant_Intensity_Wcm2(1:(end-1)) + Instant_Intensity_Wcm2(2:end))/2; %Doug's column H
 DI = cumsum(DH); %Doug's column I
-DPII = sum(DH(1:9900));% Doug's Pulse average intensity value
+DPII = sum(DH(1:9900/10e3*length(time)));% Doug's Pulse average intensity value
 DK = DI/DPII; %Something normalized by pulse average intensity
 
 lt10percent = sum(DK<0.1);
@@ -316,7 +316,9 @@ wavedata = handles.pushbutton1.UserData;
 
 pulse_interval = [str2double(handles.edit4.String), str2double(handles.edit3.String)]/1e6;
 pulse_left_boundary_index = find(wavedata.time <= pulse_interval(1),1,'last');
+if isempty(pulse_left_boundary_index); pulse_left_boundary_index = 1; end
 pulse_right_boundary_index = find(wavedata.time >= pulse_interval(2),1,'first');
+if isempty(pulse_right_boundary_index); pulse_right_boundary_index = length(time); end
 
 pulse_range_indeces = [pulse_left_boundary_index, pulse_right_boundary_index];
         
@@ -406,7 +408,7 @@ if isfield(handles.axes1.UserData,'LeftBoundaryPlot'); delete(handles.axes1.User
 handles.axes1.UserData.LeftBoundaryPlot = plot(x*[1,1], handles.axes1.YLim,'r--'); hold off;
 
 wavedata = handles.pushbutton1.UserData;
-wavedata.PulseDuration = str2double(handles.edit3.String) - str2double(handles.edit4.String);
+wavedata.PulseDuration = (str2double(handles.edit3.String) - str2double(handles.edit4.String))/1e6;
 wavedata.PulseDuration_micro = wavedata.PulseDuration*1e6;
 handles.pushbutton1.UserData = wavedata;
 
@@ -427,7 +429,7 @@ if isfield(handles.axes1.UserData,'RightBoundaryPlot'); delete(handles.axes1.Use
 handles.axes1.UserData.RightBoundaryPlot = plot(x*[1,1], handles.axes1.YLim,'r--'); hold off
 
 wavedata = handles.pushbutton1.UserData;
-wavedata.PulseDuration = str2double(handles.edit3.String) - str2double(handles.edit4.String);
+wavedata.PulseDuration = (str2double(handles.edit3.String) - str2double(handles.edit4.String))/1e6;
 wavedata.PulseDuration_micro = wavedata.PulseDuration*1e6;
 handles.pushbutton1.UserData = wavedata;
 
@@ -698,7 +700,7 @@ s.Units ='normalized';
 s.Position= [0.1300 0.1100 0.7750 0.8150];
 spiffyp(g2)
 
-if false
+if true
         delete(outfname)
         xlswrite(outfname,{'Time (s)', 'Voltage (V)', '<v>', 'volts-<v>','Calibration (V/MPa)','Pressure (MPa)','Intensity (W/cm^2)','Pulse Intensity Integral','<10%','<90%', 'Time (us)'},1,'A1')
         xlswrite(outfname,{wavedata.time',wavedata.voltage',wavedata.voltage_mean,wavedata.voltage_relative,wavedata.calibration_VoltMPa,wavedata.Pressure_MPa,wavedata.Intensity_Wcm2,wavedata.IntensityIntegral_Wcm2,wavedata.lt10percent,wavedata.lt90percent,wavedata.time_micro},1,'A2')
