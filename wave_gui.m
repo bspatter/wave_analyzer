@@ -318,7 +318,7 @@ pulse_interval = [str2double(handles.edit4.String), str2double(handles.edit3.Str
 pulse_left_boundary_index = find(wavedata.time <= pulse_interval(1),1,'last');
 if isempty(pulse_left_boundary_index); pulse_left_boundary_index = 1; end
 pulse_right_boundary_index = find(wavedata.time >= pulse_interval(2),1,'first');
-if isempty(pulse_right_boundary_index); pulse_right_boundary_index = length(time); end
+if isempty(pulse_right_boundary_index); pulse_right_boundary_index = length(wavedata.time); end
 
 pulse_range_indeces = [pulse_left_boundary_index, pulse_right_boundary_index];
         
