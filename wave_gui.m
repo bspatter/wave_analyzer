@@ -376,7 +376,7 @@ end
 
 
 if ~(max(FrequencySpectrum)==pulse_frequency)
-    MI = abs(min(pulse_pressure_MPa))/sqrt(pulse_frequency/1e6);
+    MI = abs(min(pulse_pressure_MPa))/sqrt(pulse_frequency/1e6);    
     fpulse = pulse_frequency;
 else
     wavedata.UnderSampled = true;
@@ -393,6 +393,7 @@ wavedata.PulsePressure_MPa = pulse_pressure_MPa;
 wavedata.IntensityPulseAverage_Wcm2 = pulse_average_intensity_cm;
 
 handles.pushbutton1.UserData = wavedata;
+
 
 % --- Executes on button press in pushbutton6.
 function pushbutton6_Callback(hObject, eventdata, handles)
@@ -671,7 +672,9 @@ h3 = subplot(1,3,3);
 plot(wavedata.FrequencySpectrum/1e6,abs(wavedata.PressureFFT)); hold on
 [~,fmaxi ]=max(wavedata.PressureFFT);
 fmax = wavedata.FrequencySpectrum(fmaxi);
-xlim([0,fmax*10/1e6])
+if fmax>0
+    xlim([0,fmax*10/1e6])
+end
 xlabel('Frequency (MHz)');
 ylabel('FFT(Pressure) (Pa)');
 

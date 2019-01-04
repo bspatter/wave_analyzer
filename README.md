@@ -96,6 +96,7 @@ paragraphs for an example case.
 * Fix bug where pulse bounds don't adjust y-values when switching from Intensity to pressure.
 * Fix bug: Reset plot picker radio button to pressure when new data is loaded.
 * Improve plot readability: bold Axis labels or increase font size
+* Fix bug: FFT crashes for certain well resolved waves. Note: Cal3-tek0006.
 
 ## Built With
 
