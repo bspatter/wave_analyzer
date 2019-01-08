@@ -75,6 +75,7 @@ handles.uitable2.ColumnWidth={125};
 handles.uitable2.Position(3) = handles.uitable2.Extent(3);
 handles.uitable2.Position(4) = handles.uitable2.Extent(4);
 
+
 % --- Outputs from this function are returned to the command line.
 function varargout = wave_gui_OutputFcn(hObject, eventdata, handles) 
 % varargout  cell array for returning output args (see VARARGOUT);
@@ -339,42 +340,10 @@ FWHM = range(pulse_half_times);
 pulse_average_intensity = trapz(pulse_time,pulse_intensity)/range(pulse_time);
 pulse_average_intensity_cm = pulse_average_intensity / 1e4;
 
-% FFT stuff to get frequency for the pulse alone
-if true
-    % FFT stuff
-    pulse_time_adjusted = pulse_time-pulse_time(1); % start time from 0;
-    TimeTotal=range(pulse_time_adjusted); % Total time
-    SamplingFrequency = 1/mean(diff(pulse_time_adjusted)); % sampling frequency
-    N = round(TimeTotal*SamplingFrequency); %number of data points
-    N = round(N/2)*2; %force it to be even
-    TimeTotal = N/SamplingFrequency; %new total time domain length, if N changed
-    TimeFFT = (0:(N-1))/SamplingFrequency; % time vector (max(t) is 1 bin short of T)
-    FrequencySpectrum = (0:(N/2))/N*SamplingFrequency; %frequency vector (min(f)=0, the DC component. max(f) = fs/2 exactly)
-    % Match pressure to output variables
-    if length(TimeFFT)==length(pulse_pressure)
-        y = pulse_pressure;%function(t); %hypothetical time domain vector, length(y)=N
-    else
-        y = interp1(pulse_time_adjusted,pulse_pressure, TimeFFT);%function(t); %hypothetical time domain vector, length(y)=N
-    end
-    PulsePressureFFT= bfft(y);
-    [~,pulse_frequency_index]=max(abs(PulsePressureFFT));
-    pulse_frequency = FrequencySpectrum(pulse_frequency_index);
-    
-    pulse_duration = range(pulse_time);
-    pulse_duration_micro = pulse_duration*1e6;
-else        
-    YP = fft(pulse_pressure);
-    L=length(pulse_pressure);
-    YP2 = abs(YP/L);
-    YP1 = YP2(1:(floor(L/2)+1));
-    YP1(2:end-1) = 2*YP1(2:end-1);
-    
-    sampling_frequency = 1/mean(diff(wavedata.time));
-    frequency_spectrum = sampling_frequency*(0:(L/2))/L;
-    pulse_frequency = frequency_spectrum(YP1 == max(YP1));
-end
+% % % FFT stuff to get frequency for the pulse alone
+[pulse_frequency, FrequencySpectrum,PulsePressureFFT] = find_pulse_frequency(pulse_time,pulse_pressure);
 
-
+% Set the reported pulse frequency to 0 if the signal is too underresolved to get the correct frequency
 if ~(max(FrequencySpectrum)==pulse_frequency)
     MI = abs(min(pulse_pressure_MPa))/sqrt(pulse_frequency/1e6);    
     fpulse = pulse_frequency;
@@ -385,14 +354,59 @@ else
 end
 wavedata.MI = MI;
 
+% Pulse Duration (based on manual choice of pulse bounds)
+pulse_duration = range(pulse_time);
+pulse_duration_micro = pulse_duration*1e6;
+
+
+% Find the pulse duration and Isppa according to FDA 510(k) guidelines, using the selected pulse area as the signal
+wavedata.pulse_bounds_510k = find_pulse_bounds(pulse_time,pulse_pressure);
+pulse_time_510k = pulse_time(pulse_time >= wavedata.pulse_bounds_510k(1) & pulse_time <= wavedata.pulse_bounds_510k(2));
+pulse_pressure_510k = pulse_pressure(pulse_time >= wavedata.pulse_bounds_510k(1) & pulse_time <= wavedata.pulse_bounds_510k(2));
+pulse_intensity_510k = pulse_intensity(pulse_time >= wavedata.pulse_bounds_510k(1) & pulse_time <= wavedata.pulse_bounds_510k(2));
+wavedata.pulse_duration_510k = range(wavedata.pulse_bounds_510k);
+wavedata.Isppa_510k = trapz(pulse_time_510k,pulse_intensity_510k)/wavedata.pulse_duration_510k;
+
+% estimate pulse frequency (we will try to get within two digits of that.
+[pulse_frequency_estimate, ~, ~, ~] = find_pulse_frequency(pulse_time_510k,pulse_pressure_510k); % Not sure about the center frequency because I don't know what portion of the pulse you are supposed to use to define the spectrum
+pulse_oom = 10^floor(log10(pulse_frequency_estimate));
+
+% calculate using padded zeros if necessary
+fc_old = pulse_frequency_estimate; wavedata.fc_510k = 0; npad = 1;
+while round(fc_old/pulse_oom,2)~=round(wavedata.fc_510k/pulse_oom,2) && npad<1e7
+    fc_old = wavedata.fc_510k;
+    npad = npad*10;
+    pulse_time_padded = [pulse_time; max(pulse_time)+[mean(diff(pulse_time)).*(1:npad)]']-pulse_time(1);
+    pulse_pressure_padded = [zeros(npad/2,1); pulse_pressure; zeros(npad/2,1)];
+    [wavedata.pulse_frequency_510k, wavedata.FrequencySpectrum_510k, wavedata.PulsePressureFFT_510k, wavedata.fc_510k] = find_pulse_frequency(pulse_time_padded,pulse_pressure_padded);    
+end
+if npad==1e7 && round(fc_old/pulse_oom,2)~=round(wavedata.fc_510k/pulse_oom,2)
+    fprintf('FFT May be inaccurate. Too many zeros (i.e., >10^7) needed as padding to resolve.\n\n')
+end
+
+wavedata.Ipa_510k = trapz(pulse_time,pulse_intensity)/wavedata.pulse_duration_510k;
+
+depth_cm = str2double(handles.edit7.String);
+alpha_dBcmMHz = 0.3;
+wavedata.MI_510k = abs(wavedata.PressurePeakNegative/1e6)*exp(-alpha_dBcmMHz*depth_cm*wavedata.fc_510k/1e6*(depth_cm*0.01))/sqrt(wavedata.fc_510k/1e6);
+
 % Assign relevant data to table in gui
-pulse_table_data = [pulse_duration_micro, round(max(pulse_pressure_MPa),2), round(min(pulse_pressure_MPa),2), round((max(pulse_pressure_MPa) - min(pulse_pressure_MPa))/2,2), round(pulse_average_intensity_cm,1),round(fpulse/1e6,2),round(MI,2)]';
+pulse_table_data = [pulse_duration_micro, round(max(pulse_pressure_MPa),2), round(min(pulse_pressure_MPa),2), round((max(pulse_pressure_MPa) - min(pulse_pressure_MPa))/2,2), round(pulse_average_intensity_cm,1),round(fpulse/1e6,2),round(MI,2), wavedata.pulse_duration_510k*1e6, round(wavedata.Isppa_510k/1e4,1), round(wavedata.pulse_frequency_510k/1e6,2), round(wavedata.Ipa_510k/1e4,1),round(wavedata.MI_510k,2)]';
 handles.uitable2.Data = pulse_table_data;
 
 wavedata.PulsePressure_MPa = pulse_pressure_MPa;
 wavedata.IntensityPulseAverage_Wcm2 = pulse_average_intensity_cm;
 
 handles.pushbutton1.UserData = wavedata;
+
+
+% axes(handles.axes1);
+% handles.axes1.UserData.MainPlot = plot(wavedata.FrequencySpectrum/1e6,abs(wavedata.PressureFFT));
+% 
+% handles.axes1.XLim = [min(wavedata.FrequencySpectrum), min([max(wavedata.FrequencySpectrum),100e6])]/1e6;
+% if wavedata.UnderSampled
+%     handles.axes1.UserData.mytext = text(0.05,0.95,'Warning: Undersampled Signal','Units','Normalized','Color','red','FontWeight','bold');
+% end
 
 
 % --- Executes on button press in pushbutton6.
@@ -525,7 +539,7 @@ switch (get(eventdata.NewValue,'Tag'))
 %         handles.axes1.UserData.MainPlot.YData = wavedata.PressureFFT;
         handles.axes1.XLabel = xlabel('Frequency (MHz)');
         handles.axes1.YLabel = ylabel('FFT(Pressure) (Pa)');
-        handles.axes1.XLim = [min(wavedata.FrequencySpectrum), max(wavedata.FrequencySpectrum)]/1e6;
+        handles.axes1.XLim = [min(wavedata.FrequencySpectrum), min([max(wavedata.FrequencySpectrum),100e6])]/1e6;
         if wavedata.UnderSampled
            handles.axes1.UserData.mytext = text(0.05,0.95,'Warning: Undersampled Signal','Units','Normalized','Color','red','FontWeight','bold');
         end
