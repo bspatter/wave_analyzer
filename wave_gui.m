@@ -218,7 +218,7 @@ if ~(max(FrequencySpectrum)==dominant_frequency)
 %     MI = abs(min(pulse_pressure_MPa))/sqrt(pulse_frequency/1e6);
 end
 
-[Pressure_derated, time_derated] = derate_wave(time,Pressure,str2double(handles.edit7.String), str2double(handles.edit8.String));
+[time_derated, Pressure_derated] = derate_wave(time,Pressure,str2double(handles.edit7.String), str2double(handles.edit8.String));
 Intensity_derated = Pressure_derated.^2/(rho*c);
 
 % Update the pulse bounds & call analyze pulse
@@ -570,7 +570,7 @@ function checkbox1_Callback(hObject, eventdata, handles)
 % Hint: get(hObject,'Value') returns toggle state of checkbox1
 wavedata = handles.pushbutton1.UserData;
 
-[wavedata.Pressure_derated, wavedata.time_derated] = derate_wave(wavedata.time,wavedata.Pressure,str2double(handles.edit7.String), str2double(handles.edit8.String));
+[wavedata.time_derated, wavedata.Pressure_derated] = derate_wave(wavedata.time,wavedata.Pressure,str2double(handles.edit7.String), str2double(handles.edit8.String));
 wavedata.Intensity_derated = wavedata.Pressure_derated.^2/(wavedata.rho*wavedata.c);
 handles.pushbutton1.UserData = wavedata;
 
