@@ -17,6 +17,7 @@ N = round(N/2)*2; %force it to be even
 TimeTotal = N/SamplingFrequency; %new total time domain length, if N changed
 TimeFFT = (0:(N-1))/SamplingFrequency; % time vector (max(t) is 1 bin short of T)
 FrequencySpectrum = (0:(N/2))/N*SamplingFrequency; %frequency vector (min(f)=0, the DC component. max(f) = fs/2 exactly)
+FrequencySpectrum = FrequencySpectrum(:);
 % Match pressure to output variables
 if length(TimeFFT)==length(pulse_pressure)
     y = pulse_pressure;%function(t); %hypothetical time domain vector, length(y)=N
