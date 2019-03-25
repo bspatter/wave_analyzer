@@ -1,8 +1,8 @@
-function [Pressure_derated, time_derated] = derate_wave(time,Pressure,depth_cm, attenuation_dB_cmMHz)
+function [time_derated, Pressure_derated] = derate_wave(time,Pressure,depth_cm, attenuation_dB_cmMHz)
 %   process_wave_csv.m
 %
 %
-% Syntax:  [Pressure_derated, time_derated] = derate_wave(time,Pressure,depth_cm, attenuation_dB_cmMHz)
+% Syntax:  [time_derated, Pressure_derated] = derate_wave(time,Pressure,depth_cm, attenuation_dB_cmMHz)
 %
 % Inputs: 
 %   1. time (in seconds)

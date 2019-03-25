@@ -28,7 +28,7 @@ while ischar(tline)
         break
     end
 end
-
+fclose(fid);
 
 % time
 time(isinf(voltage))=[]; %remove unreal values
