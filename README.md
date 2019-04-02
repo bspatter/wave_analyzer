@@ -31,9 +31,11 @@ intensity, mechanical index, etc...). The analysis performed is
 largely based on linear acoustics and as such, is imperfect for most
 ultrasound waves, which are typically nonlinear. However, this tool
 should provide a decent approximation for researchers and inquiring
-minds. The methods used in the analysis and relevant references should
-be detailed thoughout this document, but if something is missing, feel
-free to check out the code or contact the author.
+minds. For any reported quantities denoted by 510(k), the exact
+definition of the quantities can be found in the FDA's 2008 510(k)
+guidelines. Other methods used in the analysis and relevant references
+should be detailed thoughout this document, but if something is
+missing, feel free to check out the code or contact the author.
 
 The wave analyzer has a variety of features and functions to try to
 make it easy to extact information about useful acoustic quantities
@@ -43,11 +45,23 @@ paragraphs for an example case.
 ![Newly opened wave analyzer gui in matlab as of
 2018-07-16.](./numbered_gui_20180716.png?raw=true "Example GUI")
 
-1. Input filepath box, browse button, 'Load / Reset' button.
-* The Input filepath box contains the filepath to the .csv file which contains timeseries data of the measured hydrophone voltage. This can be typed manually or selected with a filebrowser by clicking the browse button (i.e., button with the folder icon to the right). Choosing a dataset using the filebrowser will automatically load the dataset. NOTE: The raw voltage in the input .csv file will be converted to pressure using conversion coeffiecient in the calibration box (see 2.)
-* The 'Load / Reset' button will load the dataset that is indicated in the Input filepath box. If chosen dataset is already loaded, this button will reset any analysis and plots that have been created to their original state.
-* Loading a dataset though either method (e.g., using the filebrowser or typing the path and clicking 'Load / Reset'), will automatically plot and analyze the data. The analysis will use the upper and lower time bounds of the data as right and left pulse boundaries respectively.
-* Depending on the computer and size of the dataset, this may take several seconds. 
+1. Input filepath box, browse button, 'Load / Reset' button.  * The
+Input filepath box contains the filepath to the .csv file which
+contains timeseries data of the measured hydrophone voltage. This can
+be typed manually or selected with a filebrowser by clicking the
+browse button (i.e., button with the folder icon to the
+right). Choosing a dataset using the filebrowser will automatically
+load the dataset. NOTE: The raw voltage in the input .csv file will be
+converted to pressure using conversion coeffiecient in the calibration
+box (see 2.)  * The 'Load / Reset' button will load the dataset that
+is indicated in the Input filepath box. If chosen dataset is already
+loaded, this button will reset any analysis and plots that have been
+created to their original state.  * Loading a dataset though either
+method (e.g., using the filebrowser or typing the path and clicking
+'Load / Reset'), will automatically plot and analyze the data. The
+analysis will use the upper and lower time bounds of the data as right
+and left pulse boundaries respectively.  * Depending on the computer
+and size of the dataset, this may take several seconds.
 
 2. Calibration box
 * The value specified here is used to convert the voltage in the csv file to pressure.
