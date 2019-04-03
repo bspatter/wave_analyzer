@@ -1,11 +1,16 @@
-function [ freqdata ] = bfft( timedata )
+function [ freqdata ] = bfft( timedata,varargin )
     [rows,columns]=size(timedata);
+    if ~isempty(varargin)
+        lpad=varargin{1};
+    else
+        lpad=length(timedata);
+    end
     
     if columns>rows %I want each column to be the complete fourier information
         timedata=transpose(timedata);
     end
     
-    L=round(max(size(timedata))/2)*2; %Account for possibility that L is not a power of 2
+    L=round(max(size(timedata))/2)*2; %Account for possibility that L is not a multiple of 2
     N=min(size(timedata));
     freqdata=zeros(L/2+1,N);
     

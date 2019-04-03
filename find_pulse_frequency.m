@@ -30,8 +30,6 @@ PulsePressureFFT= bfft(y);
 [~,pulse_frequency_index]=max(abs(PulsePressureFFT));
 pulse_frequency = FrequencySpectrum(pulse_frequency_index);
 
-
-
 varargout{1} = FrequencySpectrum;
 varargout{2} = PulsePressureFFT;
 
