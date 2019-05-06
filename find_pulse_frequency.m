@@ -30,8 +30,7 @@ PulsePressureFFT= bfft(y);
 [~,pulse_frequency_index]=max(abs(PulsePressureFFT));
 pulse_frequency = FrequencySpectrum(pulse_frequency_index);
 
-varargout{1} = FrequencySpectrum;
-varargout{2} = PulsePressureFFT;
+
 
 PulsePressureFFT_real = PulsePressureFFT(1:floor(end*0.9));
 % Find the center frequency according to FDA 510(k) guidelines (see 510(k) definitions of bandwidth, center frequency)
@@ -52,9 +51,9 @@ if f1==f2 && PulseBandwidth == 0
     fc = (f2b+f1b)/2;
 end
 
-
+varargout{1} = FrequencySpectrum;
+varargout{2} = PulsePressureFFT;
 varargout{3} = fc;
-
 varargout{4} = PulseBandwidth;
 
 
